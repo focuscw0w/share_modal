@@ -83,10 +83,12 @@ class _BottomSheetModalState extends State<BottomSheetModal> {
 
       File file = File(filePath);
       int sizeInBytes = await file.length();
+      print(sizeInBytes);
 
       int sizeInMB = (sizeInBytes / (1024 * 1024)).ceil();
+      int sizeInKB = (sizeInBytes / 1024).ceil();
 
-      return sizeInMB;
+      return sizeInKB;
     } catch (e) {
       print("Error getting file size: $e");
       return null;
@@ -284,7 +286,7 @@ class _BottomSheetModalState extends State<BottomSheetModal> {
         Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              '${fileInfo.fileName ?? ''}, ${fileInfo.fileSize ?? ''} MB',
+              '${fileInfo.fileName ?? ''}, ${fileInfo.fileSize ?? ''} KB',
               style: const TextStyle(fontSize: 20),
             )),
     ]);
