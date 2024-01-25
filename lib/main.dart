@@ -75,7 +75,7 @@ class _BottomSheetModalState extends State<BottomSheetModal> {
     });
   }
 
-  Future<int?> getFileSize(String? filePath) async {
+  Future<String?> getFileSize(String? filePath) async {
     try {
       if (filePath == null) {
         return null;
@@ -83,12 +83,14 @@ class _BottomSheetModalState extends State<BottomSheetModal> {
 
       File file = File(filePath);
       int sizeInBytes = await file.length();
-      print(sizeInBytes);
 
-      int sizeInMB = (sizeInBytes / (1024 * 1024)).ceil();
-      int sizeInKB = (sizeInBytes / 1024).ceil();
+      if (sizeInBytes > 1000000) {
+        return "${(sizeInBytes / 1000000)} MB";
+      }
+      else {
+        return "${(sizeInBytes / 1000)} KB";
+      }
 
-      return sizeInKB;
     } catch (e) {
       print("Error getting file size: $e");
       return null;
@@ -106,7 +108,7 @@ class _BottomSheetModalState extends State<BottomSheetModal> {
 
   void printFileDetails(String filePath) async {
     String fileName = getFileName(filePath) ?? '';
-    int? fileSize = await getFileSize(filePath);
+    String? fileSize = await getFileSize(filePath);
 
     setState(() {
       fileInfoList = [
@@ -286,7 +288,7 @@ class _BottomSheetModalState extends State<BottomSheetModal> {
         Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              '${fileInfo.fileName ?? ''}, ${fileInfo.fileSize ?? ''} KB',
+              '${fileInfo.fileName ?? ''}, ${fileInfo.fileSize ?? ''}',
               style: const TextStyle(fontSize: 20),
             )),
     ]);
@@ -302,7 +304,7 @@ class _BottomSheetModalState extends State<BottomSheetModal> {
 class FileInfo {
   final String filePath;
   final String? fileName;
-  final int? fileSize;
+  final String? fileSize;
 
   FileInfo(this.filePath, this.fileName, this.fileSize);
 }
